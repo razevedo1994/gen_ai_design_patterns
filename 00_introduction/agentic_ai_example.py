@@ -1,7 +1,7 @@
 from pydantic_ai import Agent
 from dataclasses import dataclass
 
-MODEL_ID = ""
+MODEL_ID = "claude-haiku-4-5-20251001"
 
 @dataclass
 class InventoryItem:
@@ -25,7 +25,7 @@ items = [
 agent = Agent(
     f"anthropic:{MODEL_ID}",
     system_prompt="You are an inventory manager who orders just in time.",
-    result_type=list[Reorder],
+    output_type=list[Reorder],
     )
 
 result = agent.run_sync(f"""
@@ -34,4 +34,4 @@ Identify which of these items need to be reordered this week.
 **Items**
 {items}
 """)
-print(result.data)
+print(result.output)
