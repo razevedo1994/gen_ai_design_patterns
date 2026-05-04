@@ -63,4 +63,4 @@ def generate_product_description(item: str) -> str:
 
 
 prod = generate_product_description("protein drink")
-print(prod)
+print(f"\n Product description: \n {'-' * 80}  \n {prod} \n {'-' * 80}")
