@@ -1,9 +1,10 @@
 import os
 from transformers import pipeline
+import numpy as np
 
-assert os.environ["HF_TOKEN"][:2] == "hf", (
-    "Please sign up for access to the specific Llama model via HuggingFace and provide access token."
-)
+assert (
+    os.environ["HF_TOKEN"][:2] == "hf"
+), "Please sign up for access to the specific Llama model via HuggingFace and provide access token."
 
 
 MODEL_ID = "meta-llama/Llama-3.2-3B-Instruct"
@@ -62,5 +63,24 @@ def generate_product_description(item: str) -> str:
     return results[0]["generated_text"][-1]["content"].strip()
 
 
+def evaluate(descr: str, positives, negatives) -> int:
+    descr = descr.lower()
+
+    num_positive = num_negative = 0
+    for phrase in positives:
+        if phrase in descr:
+            num_positive += 1
+            print(f"Good: {phrase}")
+    for phrase in negatives:
+        if phrase in descr:
+            num_negative += 1
+            print(f"Negative: {phrase}")
+    print(f"Good counts {num_positive}\nBad counts: {num_negative}")
+    return num_positive - num_negative
+
+
 prod = generate_product_description("protein drink")
-print(f"\n Product description: \n {'-' * 80}  \n {prod} \n {'-' * 80}")
+print(
+    f"\n Product description (Zero-shot Generation): \n {'-' * 80}  \n {prod} \n {'-' * 80}"
+)
+evaluate(prod, desired_phrases, banned_phrases)
